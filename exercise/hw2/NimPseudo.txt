@@ -1,0 +1,7 @@
+1. Create initial pile size (random 10-100)
+2. Decide who goes first (random 0-1, 0 = comp, 1 = human)
+3. Decide whether computer is smart or stupid (rand 0-1, 0 = stupid, 1 = smart)
+	- Stupid mode: computer takes a random legal value from remaining amnt of marbles
+	- Smart mode: computer takes enough marbles so that size of pile = (2^n) - 1 (exception when pile size = (2^n) - 1, then do random legal move)
+		+ amnt marbles taken = pile size - (2^n) - 1 where n is some non neg int and (2^n) - 1 is as big as possible without making the pile negative
+Rule: can't use same type of loop twice
