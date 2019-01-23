@@ -1,0 +1,9 @@
+Inside a while loop:
+- While quit is false
+	- Diplay the menu
+	- if user enters 's' or 'S', display square with scanned hieght h
+	- if user enters 'd' or 'D', display diamond with scanned hieght h
+	- if user enters 't' or 'T', display triangle with scanned height h
+	- 7<h<17
+	- if user enters 'q' or 'Q', exit the program
+
