@@ -9,48 +9,62 @@
 int main(void){
   char input;
   float num1, num2, result;
+  int divZeroErr;
+
+  printf("-------------------------\n");
+  printf("Welcome to the Calculator\n");
    
-  while(input != 'q' )
-  {
-  printf("Welcome to the Calculator\nOperation choices:\tAddition(A)\n\t\t\tSubtraction(S)\n\t\t\tMultiplication(M)\n\t\t\tDivision(D)\nEnter choice: ");
+  while(input != 'q'){
+    printf("-------------------------\n");
+    printf("Operation choices:\tAddition(A)\n\t\t\tSubtraction(S)\n\t\t\tMultiplication(M)\n\t\t\tDivision(D)\n\t\t\tQuit the menu(q)\nEnter choice: ");
 
-  input = getchar();
+    //Space for handling extra whitespace
+    scanf(" %c",&input);
 
-  if(input == 'A' || input == 'S' || input == 'M' || input == 'D'){
-    printf("Enter both numbers in required sequence: ");
-    scanf("%d%d", &num1,num2);
+    if(input == 'A' || input == 'S' || input == 'M' || input == 'D'){
+      printf("Enter both numbers in required sequence: ");
+      scanf("%f%f", &num1,&num2);
+      divZeroErr = 0;
   
-    switch(input){
-      case 'A': 
-      result = num1 + num2;
-                
-      case 'S': 
-      result = num1 - num2;
+      switch(input){
+        case 'A': 
+        result = num1 + num2;
                 break;
-      case 'M': 
-      result = num1 * num2;
-       
-      case 'D': 
-      result = num1 / num2;    //Are there any logical errors possible? If so, how will you solve it? 
-         break;
-                        
-      default: }
-
-    if(result = 50){
-      printf("Greater than 50.\n");
-    }
-    else (result!=50) {
-      printf("Less than 50\n");
+        case 'S': 
+        result = num1 - num2;
+                break;
+        case 'M': 
+        result = num1 * num2;
+                break;
+        case 'D':
+        //Check for div by zero
+        if(num2 == 0){
+          printf("Error: cannot divide by zero\n");
+          divZeroErr = 1;
+        }
+        else{
+          result = num1 / num2;
+        } 
+                break;                        
+        default:;
+      }
+      
+      if(!divZeroErr){
+        if(result > 50){
+          printf("Greater than 50\n");
+        }
+        else if(result < 50) {
+          printf("Less than 50\n");
+        }
+        else{
+          printf("Equal to 50\n");
+        }
+      }
     }
     else{
-      printf("Equal to 50\n");
+      if(input!='q')
+        printf("Please choose a valid operation\n");
     }
-              }
-        }
-  else{
-    printf("Please choose a valid operation\n");
   }
-      }
-      printf("Quit the menu.\n");
   return(0);
 }
