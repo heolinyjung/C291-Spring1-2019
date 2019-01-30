@@ -1,0 +1,47 @@
+Plane dimensions: 
+	- 40 seats in 10 rows
+	- Each row has 4 seats, A, B, C, D
+	- Rows 1-2 are first class
+	- Rows 3-4 are business class
+	- Rows 5-10 are economy class
+
+Algorithm/Pseduo-code:
+
+1. Initialize 2D array with a 0 at every seat
+2. Prompt menu : a) See Status b) Book c) Upgrade/Downgrade d) Print Boarding Pass
+ a) Print all seats like so:
+
+     A B  C D
+    |0 0  0 0| 1
+    |0 0  0 0| 2
+    |0 0  0 0| 3
+    |0 0  0 0| 4
+    |0 0  0 0| 5
+    |0 0  0 0| 6
+    |0 0  0 0| 7
+    |0 0  0 0| 8
+    |0 0  0 0| 9
+    |0 0  0 0| 10
+
+    Print:  Name   Seat num    for all passengers
+
+    Display current seat. Print "No seat booked" if not booked yet
+
+ b) Prompt : 1. First class 2. Business class 3. Economy class
+    if 1:
+	- find and return first available seat in rows 1-2
+    if 2:
+	- find and return first available seat in rows 3-4
+    if 3:
+	- find and return first available seat in rows 5-10
+
+    Print seat and prompt : "Would you like to upgrade/downgrade?" (seat dependent)
+
+ c) if current seat is economy:
+	search business class
+    if current seat is business:
+	prompt upgrade/downgrade
+    if current seat is first class:
+	search business class
+
+ d) print name, seat and class
