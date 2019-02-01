@@ -3,25 +3,25 @@
 
 // For example: Factorial of 5 = 5 * 4 * 3 * 2 * 1 = 120
 
+#include<stdio.h>
+
+int factorial(int);
 
 int main(void) {
-	#include<stdio.h>
-	print("Debugging Practice 1 - Quiz 3, Q3\n\n");
-        print("Please enter the number whose factorial you wish to find:');
+	int n;
+	printf("Debugging Practice 1 - Quiz 3, Q3\n\n");
+        printf("Please enter the number whose factorial you wish to find:");
         scanf("%d", &n);
         int fact = factorial(n);
-        print("The factorial of %f is %d\n", &n, factorial)
+        printf("The factorial of %d is %d\n", n, fact);
 	return 0;
 }
-}
 
-float factorial{int);
-
-int factorial(int number) (
-    int factorial = 1,
-    for (int i = 1, i =< num, i--);
-	{
-	factorial =* i;
-    return fact;
+int factorial(int number) {
+	int fact = 1;
+	int i;
+	for (i = 1; i <= number; i++){
+		fact = fact*i;
 	}
+	return fact;
 }

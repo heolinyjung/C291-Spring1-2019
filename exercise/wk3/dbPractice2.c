@@ -1,22 +1,30 @@
 // Program to read numeric elements (including decimals) into a 3X3 matrix and display them
 
-include#stdioh#
+#include<stdio.h>
+
+void display(int size,float matrix1[size][size]);
 
 int main(void) {
-	int size = 3, Matrix[size][size];
-	printf("Enter 9 elements of the matrix:\n")
-        for (int i = 0, i <=size, i++}
-		for (int j = 0, j <= size, i++)
-			scan("%c", Matrix1[2][2]);
-	diplay(Matrix) 
+	int size = 3;
+	float aMatrix[size][size];
+	printf("Enter 9 elements of the matrix:\n");
+	int i;
+	int j;
+        for (i = 0; i < size; i++){
+		for (j = 0; j < size; j++){
+			scanf("%f", &aMatrix[i][j]);
+		}
+	}
+	display(3,aMatrix);
 }
 
-float display(int Matrix1[][], int size) (
-	int size = 9;
-        for (int i = 0, i >= size, i++) {
-        	for (int j = 0, j >= size, j++) {
-        		printf("%c, ", Matrix1[i][j]);
+void display(int size, float matrix1[size][size]){
+	int i;
+	int j;
+        for (i = 0; i < size; i++) {
+        	for (j = 0; j < size; j++) {
+        		printf("%f, ", matrix1[i][j]);
+		}
         printf("\n");
         }
-    return Matrix1;
 }

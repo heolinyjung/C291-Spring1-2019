@@ -27,8 +27,29 @@
 
 #include<stdio.h>
 void printGrade(float marks ){
-// Hint: use if and else if conditions to print the grade 
+	if(marks<=100&&marks>=0){
+		printf("Your grade is: ");
+		if(marks<70&&marks>=0){
+			printf("F\n");
+		}
+		else if(marks<80){
+			printf("C\n");
+		}
+		else if(marks<90){
+			printf("B\n");
+		}
+		else if(marks<97){
+			printf("A\n");
+		}
+		else{
+			printf("A+\n");
+		}
+	}
+	else{
+		printf("Not a valid amount of marks for grade.");
+	} 
 }
+
 int main(void){
 	char ch;
 	float marks;
@@ -36,17 +57,20 @@ int main(void){
 	do {
 		printf("How many subjects do you have ?");
 		
-		// get the number of subjects from user 
+		scanf(" %d",&subject); 
 		
 		printf("Enter marks of all subjects : " );
-		
-		// get the marks of all subjects and store them in an array (Hint: You can use for loop to get marks of subjects)
-		
-		// do average of all marks and store it in different variable called avg
-		// avg contains average of all marks of subjects
-		
+		float mark;
+		int i;
+		float avg = 0;
+		for(i = 0;i<subject;i++){
+			printf("%d: ",i+1);
+			scanf("%f",&mark);
+			avg += mark;
+		}
+		avg = avg/subject;
 		printGrade(avg);
-		printf("/nDo you want to continue? (Y/N) ");
+		printf("Do you want to continue? (Y/N) ");
 		scanf(" %c",&ch);
 	} while(ch == 'y'|| ch == 'Y');
 	return 0;
