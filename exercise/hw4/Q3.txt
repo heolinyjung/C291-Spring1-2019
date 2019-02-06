@@ -1,0 +1,17 @@
+/* 
+ * Heoliny Jung
+ * C291
+ * Prof Adeel Bhutta
+ * 2/5/2019
+ * Assignment 4: Q3
+ */
+
+a)	void zero(long bigIntegers[]){
+		//TODO
+	}
+b)	void zero(long[]);
+c)	int add1AndSum(int oneTooSmall[]){
+		//TODO
+		return 0;
+	}
+d)	int add1AndSum(int[]);

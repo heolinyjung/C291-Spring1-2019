@@ -1,0 +1,15 @@
+/* 
+ * Heoliny Jung
+ * C291
+ * Prof Adeel Bhutta
+ * 2/5/2019
+ * Assignment 4: Q2
+ */
+
+a)	short *lPtr = NULL;
+b)	lPtr = &value1;
+c)	printf("%hd\n",*lPtr);
+d)	*lPtr = value2;
+e)	printf("%hd\n",value2);
+f)	printf("%p\n",&value1);
+g)	printf("%p\n",lPtr); // yes, lPtr == &value1

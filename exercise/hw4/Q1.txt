@@ -1,0 +1,33 @@
+/* Heoliny Jung
+ * C291
+ * Prof Adeel Bhutta
+ * 2/5/2019
+ * Assignment 4: Q1
+ */
+
+a) 	unsigned int values[SIZE] = {1,3,5,7,9,11,13};
+b)	unsigned int *vPtr = NULL;
+c)	for(i = 0;i < SIZE;i++){
+		printf("%u,",values[i]);
+	}
+d)	1. vPtr = values;
+	2. vPtr = &values[0];
+e)	for(i = 0;i < SIZE;i++){
+		printf("%u,",*(vPtr+i));
+	}
+f)	for(i = 0;i < SIZE;i++){
+		printf("%u,",*(values+i));
+	}
+g)	for(i = 0;i < SIZE;i++){
+		printf("%u,",vPtr[i]);
+	}
+h)	1. values[4];
+	2. *(values+4);
+	3. vPtr[4];
+	4. *(vPtr+4);
+i)	vPtr+5 == 200600+(4*5) == 200620 == &values[5]
+	values[5] == 11
+j)	vPtr = &values[6];
+	vPtr -= 4;
+	vPtr == &values[2] == 200608
+	*vPtr == 5
