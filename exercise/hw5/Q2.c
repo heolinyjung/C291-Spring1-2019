@@ -8,7 +8,7 @@
  */
 
 #include<stdio.h>
-#include<string.h>
+#include<stdlib.h>
 #include<time.h>
 
 //constant arrays
@@ -18,10 +18,11 @@ char* GENDERS[] = {"Female","Male","Other"};
 //Function prototypes
 char* getMonthString(void);
 char* getGenderString(void);
-unsigned int calcAge(void);
-double calcBMI(void);
+int calcAge(void);
+void calcBMI(void);
 double calcMaxHeartRate(void);
-double calcHeartRateRange(void);
+void calcTargetHeartRange(void);
+void displayProfile(void);
 
 //static profile struct w typedef
 typedef struct HealthProfiles{
@@ -46,7 +47,6 @@ static HProfile profile;
 
 int main(void){
 
-	
 	printf("--------------------------------------\n");
 	printf("Welcome to your digital health profile\n");
 	printf("--------------------------------------\n\n");
@@ -56,11 +56,11 @@ int main(void){
 	scanf(" %s",profile.lastName);
 	printf("What is your gender?\nMale (m)\nFemale (f)\nOther (o)\n");
 	scanf(" %c",&profile.gender);
-	printf("What is your birthday? (DAY MONTH YEAR)\n");
+	printf("What is your birthday? (DD MM YYYY)\n");
 	scanf("%hd %hd %d",&(profile.DOB.day),&(profile.DOB.month),&(profile.DOB.year));
-	printf("What is your height?\n");
+	printf("What is your height in inches?\n");
         scanf("%d",&profile.height);
-	printf("What is your weight?\n");
+	printf("What is your weight in pounds?\n");
         scanf("%d",&profile.weight);
 	printf("Has anyone in you family ever had heart problems? (0 = no, 1 = yes)\n");
         scanf("%d",&profile.FamHistory.heartProblem);
@@ -69,14 +69,42 @@ int main(void){
 	printf("Has anyone in you family ever had cancer? (0 = no, 1 = yes)\n");
         scanf("%d",&profile.FamHistory.cancer);
 	printf("--------------------------------------\n");
-	printf("DOB month: %s\n",*getMonthString);
-	printf("Gender: %s\n",*getGenderString);
-	printf("Age: %d\n",calcAge);
+	displayProfile();
+	printf("Age: %d\n",calcAge());
+	calcBMI();
+	printf("Max heart rate: %.2f\n",calcMaxHeartRate());
+	calcTargetHeartRange();
 	return 0;
 }
 
+void displayProfile(){
+	printf("Name: %s %s\n",profile.firstName,profile.lastName);
+	printf("Gender: %s\n",getGenderString());
+	printf("Date of birth: %s %hd %d\n",getMonthString(),profile.DOB.day,profile.DOB.year);
+	printf("Height: %d\"\n",profile.height);
+	printf("Weight: %d lbs\n",profile.weight);
+	if(profile.FamHistory.heartProblem){
+		printf("Possible inheritance of heart problems.\n");
+	}
+	else{
+		printf("No family history of heart problems.\n");
+	}
+	if(profile.FamHistory.bloodPressure){
+                printf("Possible inheritance of high blood pressure.\n");
+        }
+        else{
+                printf("No family history of hight blood pressure.\n");
+        }
+	if(profile.FamHistory.cancer){
+                printf("Possible likelyhood of cancer.\n");
+        }
+        else{
+                printf("No family history of cancer.\n");
+        }
+}
+
 char* getMonthString(){
-	return MONTHS[profile.DOB.month];
+	return MONTHS[profile.DOB.month-1];
 }
 
 char* getGenderString(){
@@ -92,8 +120,51 @@ char* getGenderString(){
 	return gPtr;
 }
 
-unsigned int calcAge(){
-	struct tm timeStruct = *localtime(&(time_t){time(NULL)});
-	int year = (int)(atoi(timeStruct.tm_year)) + 1900;
-	return year - profile.DOB.year;
+int calcAge(){
+	char year[5];
+	int yearI;
+
+	time_t itsTime = time(NULL);
+	struct tm* bigChungus = localtime(&itsTime);
+	strftime(year, 5, "%Y", bigChungus);
+
+	yearI = atoi(year);
+	return yearI - profile.DOB.year;
+}
+
+void calcBMI(){
+	double bmi = (profile.weight * 703.0)/(profile.height*profile.height);
+	printf("BMI: %.2f\n",bmi);
+	if(bmi<18.5){
+		printf("You are underweight.\n");
+	}
+	else if(bmi<24.9){
+                printf("You are at a normal BMI.\n");
+        }
+	else if(bmi<29.9){
+                printf("You are overweight.\n");
+		if(profile.FamHistory.cancer){
+			printf("With your BMI and family history of cancer, we advise you to see and oncologist.\n");
+		}
+        }
+	else{
+                printf("You are obese.\n");
+		if(profile.FamHistory.cancer){
+                        printf("With your BMI and family history of cancer, we advise you to see and oncologist.\n");
+                }
+        }
+}
+
+double calcMaxHeartRate(){
+	return (double)220-calcAge();
+}
+
+void calcTargetHeartRange(){
+	double max = calcMaxHeartRate();
+	double lower = max*0.5;
+	double upper = max*0.75;
+	printf("Target heart range: %.2f - %.2f BPM\n",lower,upper);
+	if(profile.FamHistory.heartProblem || profile.FamHistory.bloodPressure){
+		printf("With your family history, if your heart rate is outside this range, we recommend you see your physician.\n");
+	}
 }
