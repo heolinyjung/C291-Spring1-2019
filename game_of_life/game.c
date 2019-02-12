@@ -1,4 +1,4 @@
-/* game.c -------
+/* game.c ---------
  *
  * Filename: game.c
  * Description:

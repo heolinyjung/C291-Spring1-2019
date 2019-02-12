@@ -1,4 +1,4 @@
-/* key.h -------
+/* key.h ---------
  *
  * Filename: key.h
  * Description:

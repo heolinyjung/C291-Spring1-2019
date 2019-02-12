@@ -1,4 +1,4 @@
-/* game.h -------
+/* game.h ---------
  *
  * Filename: game.h
  * Description:

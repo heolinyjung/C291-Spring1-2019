@@ -1,4 +1,4 @@
-/* cell.h -------
+/* cell.h ---------
  *
  * Filename: cell.h
  * Description:

@@ -1,4 +1,4 @@
-/* key.c -------
+/* key.c ---------
  *
  * Filename: key.c
  * Description: Controls all key inputs

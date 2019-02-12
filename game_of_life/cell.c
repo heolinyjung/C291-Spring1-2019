@@ -1,4 +1,4 @@
-/* cell.c -------
+/* cell.c ---------
  *
  * Filename: cell.c
  * Description:
