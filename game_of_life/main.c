@@ -34,9 +34,22 @@
 #include <ncurses.h>
 #include "cell.h"
 #include "game.h"
+#include "key.h"
 
 int main(void)
 {
+  int y_max,x_max;
+  initscr();
+  cbreak();
+  noecho();                // Do not echo input characters
+  getmaxyx(stdscr, y_max, x_max);  // Get the screen dimensions
+  int input;
+  mvprintw(y_max/2,(x_max/2)-10,"Welcome to Oli's Game Of Life!");
+  mvprintw((y_max/2)+1,(x_max/2)-10,"Press 's' to start");
+  while(input != (int)'s' && input !='S'){
+    input = getch();
+  }
+  endwin();
   game();
   return (0);
 }

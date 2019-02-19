@@ -52,6 +52,7 @@ void display_cell (cell_t *);
 void undisplay_cell (cell_t *);
 void update_cells (int c_size_x, int c_size_y, cell_t * c[c_size_x][c_size_y]);
 void display_cells (int c_size_x, int c_size_y, cell_t * c[c_size_x][c_size_y]);
+void update_cell_state (cell_t *,int);
 void update_neighbours (int c_size_x, int c_size_y, cell_t * c[c_size_x][c_size_y]);
 void test_cell (void);
 

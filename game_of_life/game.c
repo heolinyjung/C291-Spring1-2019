@@ -46,6 +46,8 @@ int game(void)
 	well_t *w;
 
 	int x_offset, y_offset;
+	int wellW = WELL_WIDTH;
+	int wellH = WELL_HEIGHT; //values for modifying well
 	int x_max, y_max;
 	int arrow;
 	int move_counter = 0;
@@ -59,17 +61,23 @@ int game(void)
 
 
 			initscr();
-			nodelay(stdscr, TRUE);   // Do not wait for characters using getch.
+			cbreak();
 			noecho();                // Do not echo input characters
 			getmaxyx(stdscr, y_max, x_max);  // Get the screen dimensions
+
+			mvprintw(y_max-3,0,"Press '*' to increase speed by 1.2x");
+			mvprintw(y_max-2,0,"Press '/' to decrease speed by 1.2x");
+			mvprintw(y_max-1,0,"Press 'q' to quit");
 
 			x_offset = (x_max / 2) - (WELL_WIDTH / 2);
 			y_offset = (y_max / 2) - (WELL_HEIGHT / 2);
 
             int i, j;
-			for(i = 0; i < (WELL_WIDTH-1); i++)
-				for(j = 0; j < (WELL_HEIGHT-1); j++)
+			for(i = 0; i < (WELL_WIDTH-1); i++){
+				for(j = 0; j < (WELL_HEIGHT-1); j++){
 					cells[i][j] = create_cell(x_offset + i, y_offset + j);
+				}
+			}
 
             // still life
 			cells[5][5]->state[CURRENT] = LIVE;
@@ -89,13 +97,13 @@ int game(void)
 			cells[20][21]->state[CURRENT] = LIVE;
 			cells[20][22]->state[CURRENT] = LIVE;
 
-			//cells[22][20]->state[CURRENT] = LIVE;
-			//cells[23][20]->state[CURRENT] = LIVE;
-			//cells[23][18]->state[CURRENT] = LIVE;
-			//cells[25][19]->state[CURRENT] = LIVE;
-			//cells[26][20]->state[CURRENT] = LIVE;
-			//cells[27][20]->state[CURRENT] = LIVE;
-			//cells[28][20]->state[CURRENT] = LIVE;
+			cells[22][20]->state[CURRENT] = LIVE;
+			cells[23][20]->state[CURRENT] = LIVE;
+			cells[23][18]->state[CURRENT] = LIVE;
+			cells[25][19]->state[CURRENT] = LIVE;
+			cells[26][20]->state[CURRENT] = LIVE;
+			cells[27][20]->state[CURRENT] = LIVE;
+			cells[28][20]->state[CURRENT] = LIVE;
 
 
 			w = init_well(x_offset - 1, y_offset - 1, WELL_WIDTH, WELL_HEIGHT);
@@ -104,20 +112,73 @@ int game(void)
 			state = STEP;
 			break;
 		case STEP:
+			nodelay(stdscr, TRUE); //don't wait for character enter on getch()
+			mvprintw(y_max-1,20,"Current speed: %dms",move_timeout); //display current speed
 			if (move_counter > move_timeout) {
 				mvprintw(1, 50, "cells[6][6] state[old]:%d\n", cells[6][6]->state[OLD]);
 				mvprintw(2, 50, "cells[6][6] state[current]:%d\n", cells[6][6]->state[CURRENT]);
-				update_neighbours(WELL_WIDTH - 1, WELL_HEIGHT - 1, cells);
+				update_neighbours(wellW-1, wellH-1, cells);
 				mvprintw(3, 50, "cells[6][6] state[new]:%d\n", cells[6][6]->state[NEW]);
-				update_cells(WELL_WIDTH - 1, WELL_HEIGHT - 1, cells);
-				display_cells(WELL_WIDTH - 1, WELL_HEIGHT - 1, cells);
-				//cells[8+test][8+test]->state[CURRENT] = LIVE;
+				update_cells(wellW-1, wellH-1, cells);
+				display_cells(wellW-1, wellH-1, cells);
+				cells[8+test][8+test]->state[CURRENT] = LIVE;
 				move_counter = 0;
 			}
 			move_counter++;
 
 			// TODO: Figure out if this works VVVVV
-			//update_cells(WELL_WIDTH - 2, WELL_HEIGHT - 2, cells);
+			//update_cells(WELL_WIDTH - 1, WELL_HEIGHT - 1, cells);
+
+			//get input during sim
+			int input;
+			input = getch();
+			double tempMove;
+			//int i,j;
+			switch(input){
+				case (int)'q':;
+				case (int)'Q': state = EXIT;break; //exit condition
+				
+				//increase or decrease speed
+				case (int)'*': tempMove = (double)move_timeout;tempMove *= 1.2;move_timeout = (int)tempMove;break;
+				case (int)'/': tempMove = (double)move_timeout;tempMove /= 1.2;move_timeout = (int)tempMove;break;
+
+/*My attempt at changing the well size				
+				case (int)'+': x_offset -= 1;wellW += 1;y_offset -= 1;wellH += 1;
+					w = init_well(x_offset-1,y_offset-1,wellW,wellH);draw_well(w);
+
+					cell_t * cNew[wellW][wellH];
+					for(i=0;i<wellW;i++){
+						for(j=0;j<wellH;j++){
+							if(i!=0&&j!=0&&i!=wellW-1&&j!=wellH-1){
+								cNew[i][j] = cells[i][j];
+								destroy_cell(cells[i][j]);
+							}
+							else{
+								cNew[i][j] = create_cell(x_offset+i,y_offset+j);
+							}
+						}
+					}
+					cells = cNew;
+					break;
+				case (int)'-': x_offset += 1;wellW -= 1;y_offset += 1;wellH -= 1;
+					w = init_well(x_offset-1,y_offset-1,wellW,wellH);draw_well(w);
+					cell_t * cNew[wellW][wellH];
+                                        for(i=0;i<wellW;i++){
+                                                for(j=0;j<wellH;j++){
+                                                        if(i!=1&&j!=1&&i!=wellW-2&&j!=wellH-2){
+                                                                cNew[i][j] = cells[i][j];
+                                                                destroy_cell(cells[i][j]);
+                                                        }
+                                                        else{
+                                                                destroy_cell(cells[i][j]);
+                                                        }
+                                                }
+                                        }
+                                        cells = cNew;
+					break;
+*/
+				default:;
+			}
 			break;
 		case EXIT:
 			end();
@@ -127,4 +188,11 @@ int game(void)
 		refresh();
 		nanosleep(&tim,&tim_ret);
 	}
+}
+
+//stop the program and clear the board
+void end(){
+
+	clear();
+	endwin();
 }
