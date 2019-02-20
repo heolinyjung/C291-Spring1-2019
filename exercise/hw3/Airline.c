@@ -4,15 +4,18 @@
  * Prof Bhutta
  * Assignment 3 : Airline
  * 1/29/2019
+ * Resubmitted 2/19/2019
  */
 
 #include<stdio.h>
+#include<string.h>
 
 //Static variables
 static int seats[10][4] = {}; //10 rows, 4 columns (1-10, A-D)
 static char* names[10][4] = {}; //name pointer array for names of each passenger
-int current[2] = {}; //Current seat in seats array
-char* name = NULL; //user name
+static int current[2] = {0,4}; //Current seat in seats array. When current[1] == 4, no seat has been claimed
+static char name[30]; //user name
+//static char * namePtr = name; //name pointer
 
 //Function definitions
 void planeStatus(void); //prints plane diagram and all names
@@ -24,75 +27,105 @@ char rowConvert(int); //converts numbers 0-3 to A-D
 int main(void){
 	
 	printf("---------------\nWelcome to C291 Airlines Digital Booking System\n");
-	int choice = 0;
-	while(choice!=5){
-
-		printf("---------------\nPlease select an option from the menu: (input 1,2,3,4)\n");
+	char choice = '0';
+	int class;
+	printf("---------------\n");
+	printf("Please input your name: \n");
+        scanf(" %s",name);
+	while(choice!='5'){
+		sleep(1);		
+		choice = '0';
+		printf("---------------\n");
+		printf("Please select an option from the menu: (input 1,2,3,4,5)\n");
 		printf("1. See status\n2. Book a seat\n3. Upgrade/downgrade seat\n4. Print Boarding Pass\n5. Exit\n");
-		scanf(" %d",&choice);
-		int class = 0;
-		int* seat;
+		scanf(" %c",&choice);
+		int* newSeat;
 		int updown;
+		fflush(stdout);
 		switch(choice){
-			case 1: planeStatus();userStatus();
+				//get status
+			case '1': planeStatus();userStatus();
 				break;
-			case 2: class = 0;
-				printf("What class seat would you like to book?\n1. First class\n2. Business class\n3. Economy class\n");
-				scanf(" %d",&class);
-				seat = findSeat(class);
-				if(seat[1]!=4){
-					printf("Here is the seat we found:\n");
-					printf("%d%c\n",seat[0]+1,rowConvert(seat[1]));
-					current[0] = seat[0];
-					current[1] = seat[1];
-					seats[seat[0]][seat[1]] = 1;
-					names[seat[0]][seat[1]] = name;
-					printf("Here is your boarding information: \n");
-					userStatus();
+
+				//find a seat
+			case '2': if(current[1]==4){
+					class = 0;
+					printf("What class seat would you like to book?\n1. First class\n2. Business class\n3. Economy class\n");
+					scanf(" %d",&class);
+					newSeat = findSeat(class);
+					if(newSeat[1]!=4){
+						printf("Here is the seat we found: ");
+						printf("%d",newSeat[0]+1);
+						printf("%c\n",rowConvert(newSeat[1]));
+
+						current[0] = newSeat[0];
+						current[1] = newSeat[1];
+						seats[current[0]][current[1]] = 1;
+
+						names[current[0]][current[1]] = name;
+
+						printf("Here is your boarding information: \n");
+						userStatus();
+					}
+					else{
+						printf("No available seats in selected class.\n");
+					}
 				}
 				else{
-					printf("No available seats in selected class.\n");
+					printf("You have already booked a flight. Here are the details:\n");
+					userStatus();
 				}
 				break;
-			case 3: updown = -1;
-				if(current[0]<2){
-					seat = findSeat(2);
+
+				//Upgrade/downgrade
+			case '3': updown = -1;
+				if(current[1]==4){
+					printf("No current reservation found.\n");
+				}
+				else if(current[0]<2){
+					newSeat = findSeat(2);
 				}
 				else if(current[0]<4){
 					char c;
 					printf("Would you like to upgrade to first class or downgrade to economy?(u/d):\n");
 					scanf(" %c",&c);
 					if(c=='u'){
-						seat = findSeat(1);
+						newSeat = findSeat(1);
 					}
 					else if(c=='d'){
-						seat = findSeat(3);
+						newSeat = findSeat(3);
 					}
 				}
-				else if(current[0]<10){
-					seat = findSeat(2);
-				}
 				else{
-					printf("No current reservation found.\n");
+					newSeat = findSeat(2);
 				}
-				if(seat[1]!=4){
-					printf("Here is your new boarding information:\n");
-					current[0] = seat[0];
-					current[1] = seat[1];
-					seats[seat[0]][seat[1]] = 1;
-                                        names[seat[0]][seat[1]] = name;
-					printf("%d%c",current[0],rowConvert(current[1]));
+				if(newSeat[1]!=4){
+					seats[current[0]][current[1]] = 0; //remove old reservation
+					current[0] = newSeat[0];
+                                        current[1] = newSeat[1];
+                                        seats[current[0]][current[1]] = 1; //add new reservation
+
+                                        names[current[0]][current[1]] = name;
+                                        printf("Here is your new boarding information: \n");
+                                        userStatus();
 				}
 				break;
-			case 4: printPass();
+
+				//Print boarding pass
+			case '4': sleep(1);printPass();
 				break;
-			default: printf("Not a valid selection.\n");
+			case '5': break;
+
+			default: printf("Not a valid selection.\n");choice = '0';break;
 		}
 	}
 	printf("Thank you for flying C291 Airlines!\n");
 	return 0;
 }
 
+/*
+ * Converts an int the represents a row to a char A, B, C, or D
+ */
 char rowConvert(int row){
 	char c;
 	switch(row){
@@ -108,6 +141,10 @@ char rowConvert(int row){
 	}
 	return c;
 }
+
+/*
+ * Prints the plane grid
+ */
 
 void planeStatus(void){
 	printf("---------------\nCurrent seat availability:\n AB CD\n");
@@ -133,14 +170,16 @@ void planeStatus(void){
         }
 }
 
+/*
+ * Prints the name of cutomer and their seat
+ */
+
 void userStatus(void){
 	printf("%s\t\t%d%c\n",names[current[0]][current[1]],current[0]+1,rowConvert(current[1]));
 }
 
 int* findSeat(int class){
-        int seat[2] = {};
-        printf("Please input your name: \n");
-        scanf("%s",name);
+        int seat[2] = {0,0};
         int start;
         int end;
         int cont = 1;
@@ -159,9 +198,9 @@ int* findSeat(int class){
 	int found = 0;
         if(cont){
 		int i = start;
-		while(!found&&i<end){
+		while((!found)&&i<end){
 			int j = 0;
-			while(!found&&j<4){
+			while((!found)&&j<4){
                                 if(seats[i][j]==0){
                                         seats[i][j] = 1;
 					found = 1;
