@@ -1,0 +1,71 @@
+**keyword: struct**
+variable - one value
+structure - many variables
+class - variables and methods
+
+EX:
+struct Student{
+	char name[16];
+	int id;
+};
+
+struct Student oli;
+oli.id = 0003638988;
+printf("%d",oli.id); // => 3638988
+
+typedef struct Student StuStr; //defines struct Student as StuStr
+StuStr oli;
+
+typedef struct{
+	char *face;
+	char *suit;
+}Card;
+
+Card aceOfSpades;
+
+struct Card{
+	char *face;
+	char *suit;
+} aCard; //aCard is a struct of Card
+
+printf("%c",*(aCard.suit)); //. is postfix so it has precedence
+
+- structs can be member variables of other structs
+EX:
+struct C291{
+	struct Student fortyfive[45];
+	char *semester;
+	int year;
+} myClass;
+
+(myClass.fourtyfive[0]).id = 30;
+printf("%d",(myClass.fortyfive[0]).id); //=> 30
+
+struct Card{
+        char *face;
+        char *suit;
+} aCard,*pCard;
+*(aCard.suit) = 'c'
+pCard = &aCard;
+printf("%c",*((*pCard).suit)); //=> c
+
+struct Card deck[52] = {};
+pCard = deck[52]
+*(deck[0].suit) == c
+
+- cannot have a struct as a member of itself, but can have a pointer of type struct (itself) as a member of itself
+	- EX: linked list, each node class has pointers to other nodes
+
+- struct useable operations: &, =, ., sizeof
+- struct unuseable operations: ==, !=, >=, <=
+
+- sizeof(Card); //8 (4 bytes for each ptr)
+
+struct Card bCard;
+bCard = aCard; //makes a copy of all parameters
+
+- structs allocate memory locations at start of next "word" (4 byte intervals)
+- word memory = 4 bytes in each row
+- endian: byte ordering (0,1,2,3 vs. 3,2,1,0)
+
+- passing struct to functions are by value, might be more useful to pass by pointer/reference

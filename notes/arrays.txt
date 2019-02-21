@@ -1,0 +1,60 @@
+Array:
+int myArr[5]; // = [(0),(1),(2),(3),(4)]
+
+sizeof(myArr) = 24; //Size of array in bytes
+- C guarantees elements in array are stored in contiguous memory
+- If array values are not initiallized, will default to whatever data was previously in those memory locations
+	- It is a good idea to initialize arrays early
+	EX: int myArr[5] = {1,2,3,4,20};
+	EX2: int myArr[5] = {1,2,3};
+		=> myArr[4] = 0;
+	EX3: int myArr[5] = {};
+
+- **C will not throw an error for out of bounds locations**
+	i.e. printf("%d",myArr[5]);
+		=> some random value (whatever the next set of bytes output)
+
+- ***Name of array is the address of first element of array***
+	EX: printf("%p", myArr);
+	printf("%p", &myArr[0]);
+        printf("%p",&myArr);
+		=> same values
+
+- C strings are just arrays of characters
+	EX: char string1 = "First";
+		=> {'F','i','r','s','t','\0'} // \0 = null character
+	EX2: char string2 = {'F','i','r','s','t','\0'}; // \0 must be included
+	
+	EX3: CANNOT DO
+	char string3[6];
+	string1 = "first"; //doesn't work beacuse string1 == first element in the arrray
+
+	- strcpy(what to copy, where to put it (string name))
+
+	- read string from user: 
+	char string3[20];
+	scanf("%19s", string3); //reads up to 19 characters from user (doesn't need & b/c name of string is address of first element), save last char for null char
+
+- it's a good idea to give functions string sizes as additional paramenters.
+
+- *** By default, arrays are passed by reference ***
+	- Stop this with function(const int a[]){};
+
+- dimensional arrays:
+	- int a[2][2] = {{0,1},{2,3}};
+	- in reality, all arrays no matter the dinmension are stored as one dimensional arrays
+	EX: printf("%d", a[0][0]);
+		=> 0
+	EX2: printf("%d", a[0][2]);
+		=> 2
+	- a => address of start of array (0)
+	- a[1] => address of start of row 1 (2)
+	- When passing multi-dimensional arrays, every bracket besides the first must have sizes.
+	EX: int function(int grades[][SIZE]){}
+
+- library ctype.h:
+	- isblank, isdigit, isalpha, islower, tolower, toupper
+	- takes in and returns ASCII values
+- library stdlib.h
+	- strtod : converts string to double
+

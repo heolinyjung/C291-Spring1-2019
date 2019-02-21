@@ -1,0 +1,97 @@
+assignment: int myVar = 5;
+
+%p = hexadecimal
+%d = decimal
+
+printf("%d",myVar1++);
+	=> 5
+printf("%d",myVar1++);
+	=> 6
+	(myVar1 = 7)
+printf("%d",++myVar1);
+	=> 8
+	(myVar1 = 8)
+
+comparisons: == or <= or >=
+-----------------------------
+C compiler: when you use an assignment in () it will compile
+	- if the statement executes, counts as true
+EX:
+myVar1 = 5, myVar2 = 10;
+if (myVar1 = 20)
+	printf("%d",myVar1);
+else
+	printf("%d",myVar2);
+
+	=> 5
+
+EX2:
+if(1){ //true
+	printf("ONE\n");
+	printf("YES");
+}
+else{
+	printf("NO");
+}
+	=> "ONE"
+	   "YES"
+----------------------------
+conditional statements:
+	x = 7; 
+	if(0) //false
+	if(x = 0) //false
+	if(x = 6) //true
+	if(x == 7) //true
+- evaluates the statement in the parenthesis then uses that as value
+
+while(x>=1); //infinite loop
+
+int x;
+for(x=10 ; x>=1 ; x--){
+  printf("%d",x);
+}
+
+for(;;); //infinite loop
+
+----------------------------
+swtich(a==b){
+  case 1: printf("yes");
+   break;
+  case 0: printf("no");
+   break;
+}
+
+char myChar = getchar();
+switch(myChar){
+ case 'a': 
+  printf("A");
+  break;
+ case 'b':
+  printf("B");
+  break;
+ default:
+  printf("not sure")
+}
+----------------------------
+- do while works
+----------------------------
+- puts statement: like print
+puts( grade >= 60 ? "Passed" : "Failed" );
+grade >= 60 ? puts("passed") : puts("Failed");
+//like an if-else
+
+---HOW TO PRINT IN WHILE LOOPS W sleep()---
+- fflush(stdout) flushes the stream while process is asleep
+	-stdin = standard input stream (keyboard)
+	-stdout = standard output stream (console)
+	-stderr = error stream
+----------------------------
+printf()//uses stdout automatically
+fprintf(stdout,"")//can explicitly select the output stream
+
+- "\n" also flushes output stream
+
+- fprintf(stderr, ". "); //error stream flushes automatically
+----------------------------
+void myFunction(void); //function definition
+

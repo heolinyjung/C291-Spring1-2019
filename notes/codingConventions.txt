@@ -1,0 +1,14 @@
+---PRO CODING CONVENTIONS---
+Header file has all declarations 
+- header file is #included
+
+Seperate file has all definitions
+- also #included
+
+Center file only has main()
+
+----------------------------
+---ADEEL'S CHOICE---
+- All declarations above main
+- All definitions below main
+--------------------

@@ -1,0 +1,19 @@
+- FILE = file structure
+
+- FILE * cfPtr; //file pointer
+
+- cfPtr = fopen("clients.txt","w") //returns file pointer
+	- opens file, w = write, r = read, a = append
+
+- while(feof(stdin)) = looks for end of file
+
+- fprintf(cfPtr,"content"); //writes data to file
+- fscanf(cfPtr); //scans from file
+
+-rewind(); sends pointer back to beginning of file
+
+Random access files
+- Save data is equally sized chunks of memory
+- use fwrite(); and fread();
+- fseek(FILE *,long int offset, int whence);
+	- whence = SEEK_SET, SEEK_CUR, or SEEK_END

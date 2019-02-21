@@ -1,0 +1,19 @@
+- 10001
+- 1's complement = 01110
+- 2's complement = 01111 (add one)
+
+- all "complements" are opposite in most significant bit (MSB)
+	- starts with 0 = positive
+	- starts with 1 = negative
+
+- converting from negative to positive uses the same process as positive to negative
+
+3-bit computing w/ 2's complement:
+000 = 0
+001 = 1
+010 = 2
+011 = 3
+100 = -4
+101 = -3
+110 = -2
+111 = -1

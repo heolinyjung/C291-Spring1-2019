@@ -1,0 +1,100 @@
+int v = 10;
+   - type = int
+   - variable name = v
+   - value stored in mem loc = 10
+   - mem address = &v
+
+- variables have values stored at some memory address
+- pointers are containers for memory addresses (value of a pointer is technically a mem address)
+
+int* p;
+   - delcaration of pointer variable p
+   - type = int* //int pointer
+   - int *p; //same thing
+   - int * p; // also same thing
+   - int*p; //also same thing
+
+int* p = &v;
+int* q;
+q = &v;
+//p(value) == q(value)
+
+- p != &p;
+
+- dereferencing : getting the value of the variable at the memory address stored by a pointer
+	printf("%d",*p); // == 10
+
+- *&p (|| &*p) == value of p == &v
+
+int* ptr1 = 0; //same as = NULL, no pointer value yet. Called dangling pointer
+
+-------------
+
+Using pointers to pass by reference (pass by pointer)
+
+f1(int p);
+f2(int* ptr);
+
+main(){
+ int a = 5;
+ f1(a);
+ printf("%d",a); // => 5
+ f2(&a);
+ printf("%d",a); // => 7
+}
+
+f1(int p){
+ p+=2;
+}
+
+f2(int* ptr){
+ *ptr+=2;
+}
+
+-------------
+
+controlling access
+- const = like final
+
+const ptr	non const data	int * const ptr = &v; //ptr cant be changed but dereference can
+const ptr	const data	const int* const ptr = &v; //neither can be changed
+non const ptr	non const data	int* p = &v; //both can be changed
+non const ptr	const data	const int* ptr = &v; // ptr can be changed but dereference cannot
+
+- All ptrs are same size (4 bytes for 32bit, 8 for 64bit)
+
+- incrementing/decrementing ptrs moves ptr by # of bytes value type has
+int* ptr1 = &v;
+double* ptr2 = &d;
+char* ptr3 = $c;
+
+ptr1++; //move to next int (4 bytes over)
+ptr2++; //move to next double (8 bytes over)
+
+int v[5] = {20,80,11,3,7};
+	-addresses = 3000,3004,3008,...
+int* ptrv;
+ptrv = &v[0]; // or ptrv = v;
+	- array name (v) are const ptr
+
+printf("%d",v[0]); //  => 20
+printf("%d",*ptrv); // => 20
+printf("%d",*v); //    => 20
+printf("%d",ptrv[0]);//=> 20
+printf("%d",v[1]); // => 80
+printf("%d",ptrv[1]); // => 80
+printf("%d",*(ptrv+1)); // => 80
+
+- can delcare an array of pointers
+	char* suit[4] = {"Hearts","Diamonds","Spades","Clubs"}
+	- like a 2D array with pointers
+
+- can declare a pointer pointer
+	- int** ptr2 = &ptr1; //double pointer
+	- can have any amount of pointer pointers
+	- int*** ptr3 = &ptr2;
+
+- b[5];//array index notation
+- *(b + 3);//array name and pointer/offset notation
+- *(bPtr + 3);//3 = offset. Pointer/offest notation
+- bPtr[1];//pointer/index notation

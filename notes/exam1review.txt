@@ -1,0 +1,29 @@
+int num;
+int* pi = &num;
+num = 0; 	//fine
+pi = num; 	//also fine
+num = 10;
+pi = num;	//not fine: can only assign 0, NULL, or memory to pointers (Error: invalid conversion from int to int*)
+pi = (int*)num; //also not fine
+void* ptr; 	// points to any mem location;
+------------------
+int num = 5;
+int* pi = &num;
+printf("%d",num); 	//5
+printf("%d",*pi); 	//5
+*pi = 10; 		//fine
+printf("%d",num); 	//10
+------------------
+int num = 5;
+const int* pi = &num; 	//pointer points to constant data (pointer cannot modify data)
+*pi = 10;		//not fine, compiler error
+num = 10;		//fine
+printf("%d",num);	//10
+int* const pi = &num;	//constant pointer points to nonconst data
+pi = &num1;		//error
+------------------
+int vector[4] = {17,19,21,4};
+int* pi = vector+2;
+printf("%d",*vector+3);	//20 because dereference takes precedence
+------------------
+use strcpy(cstring,"string") to place a string in an already initialized cstring

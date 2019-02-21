@@ -1,0 +1,23 @@
+Dynamic Allocation: allocate memory during runtime
+	- new, malloc returns pointer of type void that can be typecasted to fit your needs
+	- void *calloc(int num, int size); //allocates array of num elements with size bytes
+	- void free(void* address); //releases a block of memory specified by address
+	- void* malloc(int num); //allocates an array of num bytes and leave them uninitialized
+	- void realloc(void* address, int newsize);
+
+int* ptr;
+ptr = (int*)malloc(num*sizeof(int));
+if(ptr==NULL){ //good practice to check
+	//exit
+}
+else{
+	//cont
+}
+
+-------------------
+
+char name[100];
+
+-------------------
+
+char* titles[]={"tale of two cities","hamlet","odyssey"};

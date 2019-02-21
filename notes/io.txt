@@ -1,0 +1,39 @@
+printf();
+- %d = signed int
+- %u = unsigned int
+- %i = signed int (has diff meaning for scanf)
+- %o = octal
+- %x = hex
+- &h-,%l-,%ll- = half-, long-, longlong- (%hd)
+
+- %f or F = fixed point, 6 digit precision, at least one digit left of dot
+- %e or E = exponential notation, 6 digit precision, only one digit left of dot
+- %g or G = either %f or %g
+	- when exp < -4 or # is greater than given precision, acts like %e
+	- otherwise acts as %f
+
+- %c = character
+- %s = c-string ("\0")
+- %p = address in hex
+- %% = prinfs a percentage sign
+
+- %4d = 4 digits right justified
+	- printf("%4d",1); -> "   1"
+- %-4d = left justified
+- %+4d = prints + sign for positive values
+- %04d = prints leading 0's
+	- printf("%4d",1); -> "0001"
+- %#d = prints prefix
+	- o for octal
+	- ox for hex
+- %.4f = precision of 4 floating point
+
+- printf("%*.*f",7,2,value)
+	- => "%7.2f"
+
+scanf();
+- scanf("%8[aeiou]",z); (z is a char array)
+	- reads up to 8 chars if char is vowel ([] is scanset)
+	- [^] means compliment
+-"%d%*c%d%*c%d",day,month,year
+	- ignores characters inbetween digits
