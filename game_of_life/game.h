@@ -32,7 +32,7 @@ typedef struct terminal_dimensions
 // Delay timers for the main game loop.
 #ifndef DELAY_US
 #define DELAY_US 100000
-#define BASE_TIMEOUT 150 //changed to 150ms
+#define BASE_TIMEOUT 1000 //changed to 150ms
 #endif
 
 // Game States

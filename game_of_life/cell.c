@@ -104,21 +104,20 @@ void display_cells (int c_size_x, int c_size_y, cell_t * c[c_size_x][c_size_y])
 void update_cell_state (cell_t * c,int neighbours)
 {
 	if (c->state[CURRENT] == LIVE) {
-		if ((neighbours >= 2) && (neighbours <= 3)){
+		if ((neighbours < 2)||(neighbours > 3)){
+			c->state[NEW] = DIE;
+		}
+		else{
+			c->state[NEW] = LIVE;
+		}
+	}
+	else if ((c->state[CURRENT] == DIE) || (c->state[CURRENT] == UNKNOWN)) {
+		if (neighbours == 3){
 			c->state[NEW] = LIVE;
 		}
 		else{
 			c->state[NEW] = DIE;
 		}
-	}
-	else if ((c->state[CURRENT] == DIE) || (c->state[CURRENT] == UNKNOWN)) {
-		if (neighbours == 3)
-			c->state[NEW] = LIVE;
-		else
-			c->state[NEW] = DIE;
-	}
-	else if(c->state[CURRENT] == UNKNOWN){
-		c->state[NEW] = UNKNOWN;
 	}
 }
 
@@ -138,17 +137,18 @@ void update_neighbours (int c_size_x, int c_size_y, cell_t * c[c_size_x][c_size_
 			n = 0; //num of neighbours
 			int i;
 			int j;
-			for(i = 0; i <= 2; i++){
-				for(j = 0; j <= 2; j++){
-					 if((x - 1 >= 0) && (x + 1 <= c_size_x)){
-                                		if((y - 1 >= 0) && (y + 1 <= c_size_y)){
-							if((c[(x-1)+i][(y-1)+j]->state[CURRENT] == LIVE) && (i != j)){
+			for(i = -1; i <= 1; i++){
+				for(j = -1; j <= 1; j++){
+					 if((x-1 >= 0) && (x+1 <= c_size_x)){
+                                		if((y-1 >= 0) && (y+1 <= c_size_y)){
+							if(c[(x)+i][(y)+j]->state[CURRENT] == LIVE){
 								n++;
 							}
 						}
 					}
 				}
 			}
+			n -= c[x][y]->state[CURRENT] == LIVE ? 1 : 0;
 			update_cell_state(c[x][y],n);
 		}
 	}
