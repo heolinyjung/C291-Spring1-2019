@@ -5,8 +5,8 @@
  * Author: Dmitrii Galantsev
  * Maintainer:
  * Created:      May 12 11:28 2018
- * Last-Updated: September 23 15:38 2018
- *           By: Dmitrii Galantsev
+ * Last-Updated: February 24 2019
+ *           By: Heoliny Jung
  */
 
 /* Commentary:
@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <ncurses.h>
 #include <time.h>
+#include <stdlib.h>
 #include "cell.h"
 #include "game.h"
 #include "well.h"
@@ -35,11 +36,12 @@ void init_game(void)
 	int x,y;
 }
 
-int game(void)
+int game(int shape)
 {
 	static int state = INIT;
 	struct timespec tim = {0,1000000};  // Each execution of while(1) is approximately 1mS
 	struct timespec tim_ret;
+	srand(time(NULL));
 
 	well_t *w;
 
@@ -71,44 +73,50 @@ int game(void)
 			mvprintw(y_max-2,0,"Press '/' to decrease speed by 1.2x");
 			mvprintw(y_max-5,0,"Press '+' to increase well size");
 			mvprintw(y_max-4,0,"Press '-' to decrease well size");
+			mvprintw(y_max-6,0,"Press 'p' to pause/unpause the simulation");
 			mvprintw(y_max-1,0,"Press 'q' to quit");
 
 			x_offset = (x_max / 2) - (WELL_WIDTH / 2);
 			y_offset = (y_max / 2) - (WELL_HEIGHT / 2);
 
-            int i, j;
+            		int i, j;
 			for(i = 0; i < (WELL_WIDTH-1); i++){
 				for(j = 0; j < (WELL_HEIGHT-1); j++){
 					cells[i][j] = create_cell(x_offset + i, y_offset + j);
 				}
 			}
 
-            // still life
-			cells[5][5]->state[CURRENT] = LIVE;
-			cells[5][6]->state[CURRENT] = LIVE;
-			cells[6][5]->state[CURRENT] = LIVE;
-			cells[6][6]->state[CURRENT] = LIVE;
-
-            // glider
-			cells[20][5]->state[CURRENT] = LIVE;
-			cells[20][6]->state[CURRENT] = LIVE;
-			cells[20][7]->state[CURRENT] = LIVE;
-			cells[21][7]->state[CURRENT] = LIVE;
-			cells[22][6]->state[CURRENT] = LIVE;
-
-            // oscillator
-			cells[20][20]->state[CURRENT] = LIVE;
-			cells[20][21]->state[CURRENT] = LIVE;
-			cells[20][22]->state[CURRENT] = LIVE;
-
-			//cells[22][20]->state[CURRENT] = LIVE;
-			//cells[23][20]->state[CURRENT] = LIVE;
-			//cells[23][18]->state[CURRENT] = LIVE;
-			//cells[25][19]->state[CURRENT] = LIVE;
-			//cells[26][20]->state[CURRENT] = LIVE;
-			//cells[27][20]->state[CURRENT] = LIVE;
-			//cells[28][20]->state[CURRENT] = LIVE;
-
+			mvprintw(y_max-9,0,"shape number %c",'1');
+			mvprintw(y_max-10,0,"shape number %d",shape);
+			switch(shape){
+            			case (int)'1':// still life
+					cells[5][5]->state[CURRENT] = LIVE;
+					cells[5][6]->state[CURRENT] = LIVE;
+					cells[6][5]->state[CURRENT] = LIVE;
+					cells[6][6]->state[CURRENT] = LIVE;
+					break;
+            			case (int)'2':// glider
+					cells[20][5]->state[CURRENT] = LIVE;
+					cells[20][6]->state[CURRENT] = LIVE;
+					cells[20][7]->state[CURRENT] = LIVE;
+					cells[21][7]->state[CURRENT] = LIVE;
+					cells[22][6]->state[CURRENT] = LIVE;
+					break;
+		            	case (int)'3':// oscillator
+					cells[20][20]->state[CURRENT] = LIVE;
+					cells[20][21]->state[CURRENT] = LIVE;
+					cells[20][22]->state[CURRENT] = LIVE;
+					break;
+				case (int)'4':// random 3x3
+					for(i = 0; i<3; i++){
+						for(j = 0; j<3; j++){
+							int r = rand(); //generate random num and use %2 to get a 1 or 0;
+							cells[15+i][15+j]->state[CURRENT] = (r%2 == 1) ? LIVE:DIE;
+						}
+					}
+					break;
+				default:;
+			}
 
 			w = init_well(x_offset - 1, y_offset - 1, WELL_WIDTH, WELL_HEIGHT);
 			draw_well(w);
@@ -119,6 +127,8 @@ int game(void)
 			nodelay(stdscr, TRUE); //don't wait for character enter on getch()
 			mvprintw(y_max-1,20,"Current speed: %dms",move_timeout); //display current speed
 			
+			cell_t ** cellTemp = cells;
+
 			if (move_counter > move_timeout) {
 				mvprintw(1, 50, "cells[6][6] state[old]:%d\n", cells[6][6]->state[OLD]);
 				mvprintw(2, 50, "cells[6][6] state[current]:%d\n", cells[6][6]->state[CURRENT]);
@@ -138,8 +148,13 @@ int game(void)
 
 			switch(input){
 				case (int)'q':;
-				case (int)'Q': state = EXIT;break; //exit condition
-				
+				case (int)'Q': state = GAME_OVER;break; //exit condition
+				case (int)'p':;
+				case (int)'P': input = getch();
+					while(input!=(int)'P' && input!=(int)'p'){
+						input = getch();
+					}
+					break;
 				//increase or decrease speed
 				case (int)'*': tempMove = (double)move_timeout;tempMove /= 1.2;move_timeout = (int)tempMove;break;
 				case (int)'/': tempMove = (double)move_timeout;tempMove *= 1.2;move_timeout = (int)tempMove;break;
@@ -173,7 +188,6 @@ int game(void)
 					draw_well(w);
 					/*
 					cell_t * cNew[wellW][wellH];
-					int i,j;
                                         for(i=0;i<wellW;i++){
                                                 for(j=0;j<wellH;j++){
                                                         if(i!=1&&j!=1&&i!=wellW-2&&j!=wellH-2){
@@ -189,11 +203,73 @@ int game(void)
                                         *cellsPtr = cNew;
 					*/
 					break;
+				case (int)'r':;
+				case (int)'R':
+                                        for(i=1;i<wellW-1;i++){
+                                                for(j=1;j<wellH-1;j++){
+							cells[i][j]->state[CURRENT] = DIE;
+							cells[i][j]->state[NEW] = DIE;
+                                                }
+                                        }break;
+				case (int)'F':;
+				case (int)'f':;
+					FILE *countPtr;
+				        int saveNum;
+     			 		if((countPtr = fopen("./saves/numSaves.txt","r")) == NULL){
+        			        	mvprintw(5,0,"Number of saves file could not be opened");
+        				}
+        				else{
+                				fscanf(countPtr,"%d",&saveNum);
+                				fclose(countPtr);
+        				}
+        				FILE *boardFPtr;
+        				char fileName[20];
+        				sprintf(fileName,"./saves/save%d.dat\0",saveNum);
+        				if((boardFPtr = fopen(fileName,"w")) == NULL){
+                				mvprintw(5,0,"Save file %d could not be created",saveNum);
+        				}
+        				else{
+                				fprintf(boardFPtr,"%d\n%d\n%d\n%d\n",x_offset,y_offset,wellH,wellW);
+                				int i,j;
+			 	                mvprintw(8,0,"%d",cells[5][5]->state[CURRENT]==LIVE?1:0);
+				                for(i = 0; i<WELL_WIDTH-1;i++){
+				                        for(j = 0; j < WELL_HEIGHT-1; j++){
+				                                int cState = (cells[i][j])->state[CURRENT] == LIVE ? 1:0;
+				                                fprintf(boardFPtr,"%d %d %d\n",i,j,cState);
+				                        }
+				                }
+				                fclose(boardFPtr);
+				        }
+					
+				case (int)'L':;
+				case (int)'l':;
+					FILE *savePtr;
+					char fileName[20];
+					int num;
+					scanw("%d",&num);
+					sprintf(fileName,"./saves/save%d.dat\0",num);
+                                        if((boardFPtr = fopen(fileName,"r")) == NULL){
+                                                mvprintw(5,0,"Save file %d could not be created",saveNum);
+                                        }
+                                        else{
+						fscanf("%d\n%d\n%d\n%d\n")
+						for(i = 0; i<wellW-1; i++){
+							for(j = 0; j < wellH-1; j++){
+                                                                if(()->state[CURRENT] == LIVE){
+								
+                                                        }
+					}
 				default:;
 			}
 			break;
+		case GAME_OVER: 
+			end(x_max,y_max);
+			state = EXIT;
+			break;
+
 		case EXIT:
-			end();
+			clear();
+			endwin();
 			return(0);
 			break;
 		}
@@ -203,8 +279,65 @@ int game(void)
 }
 
 //stop the program and clear the board
-void end(){
-
+void end(int x_max, int y_max){
 	clear();
-	endwin();
+	mvprintw(y_max/2,(x_max/2)-30,"All life has been terminated. Why did you have to do this?...(Press any key to exit)");
+	nodelay(stdscr, FALSE);
+	int cont = getch();
+	if(cont){}
 }
+
+//save a board to a file
+/*
+ * Files are formatted like so:
+ * WellX
+ * WellY
+ * WellW
+ * WellH
+ * cellX cellY cellState[CURRENT]
+ * ...
+ * EOF
+ * MOVED TO INSIDE MAIN
+void saveBoard(cell_t ** cells, int wellX, int wellY, int wellW, int wellH){
+	FILE *tempPtr;
+	if((tempPtr = fopen("./saves/temp.txt","w")) == NULL){
+                mvprintw(5,0,"Temp not be opened");
+        }
+        else{
+                fprintf(tempPtr,"Text");
+                mvprintw(5,0,"Text");
+                fclose(tempPtr);
+        }
+
+	FILE *countPtr;
+	int saveNum;
+	if((countPtr = fopen("./saves/numSaves.txt","r")) == NULL){
+		mvprintw(5,0,"Number of saves file could not be opened");
+	}
+	else{
+		fscanf(countPtr,"%d",&saveNum);
+		mvprintw(5,0,"%d",saveNum);
+		fclose(countPtr);
+	}
+	FILE *boardFPtr;
+	char fileName[20];
+	sprintf(fileName,"./saves/save%d.dat\0",saveNum);
+	mvprintw(5,0,"%s",fileName);
+	if((boardFPtr = fopen(fileName,"w")) == NULL){
+		mvprintw(5,0,"Save file %d could not be created",saveNum);
+	}
+	else{
+		fprintf(boardFPtr,"%d\n%d\n%d\n%d\n",wellX,wellY,wellH,wellW);
+		int i,j;
+		mvprintw(8,0,"%d",cells[5][5]->state[CURRENT]==LIVE?1:0);
+		for(i = 0; i<WELL_WIDTH-1;i++){
+			for(j = 0; j<WELL_HEIGHT-1; j++){
+				int cState = (cells[i][j])->state[CURRENT] == LIVE ? 1:0;
+				fprintf(boardFPtr,"%d %d %d\n",i,j,cState);
+			}
+		}
+		fclose(boardFPtr);
+	}
+
+}
+*/

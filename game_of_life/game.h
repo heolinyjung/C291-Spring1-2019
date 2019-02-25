@@ -32,14 +32,15 @@ typedef struct terminal_dimensions
 // Delay timers for the main game loop.
 #ifndef DELAY_US
 #define DELAY_US 100000
-#define BASE_TIMEOUT 1000 //changed to 150ms
+#define BASE_TIMEOUT 150 //changed to 150ms
 #endif
 
 // Game States
-enum {INIT, STEP, EXIT};
+enum {INIT, STEP, GAME_OVER, EXIT};
 
 void init_game(void);
-void end(void);
-int game(void);
+void end(int,int);
+int game(int);
+void saveBoard(cell_t ***,int,int,int,int);
 
 /* game.h ends here */
