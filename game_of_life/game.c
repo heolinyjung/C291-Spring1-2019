@@ -252,13 +252,24 @@ int game(int shape)
                                                 mvprintw(5,0,"Save file %d could not be created",saveNum);
                                         }
                                         else{
-						fscanf("%d\n%d\n%d\n%d\n")
+						int xpos,ypos;
+						fscanf("%d\n%d\n%d\n%d\n",&xpos,&ypos,&wellW,&wellH);
+						x_offset = xpos;
+						y_offest = ypos;
 						for(i = 0; i<wellW-1; i++){
 							for(j = 0; j < wellH-1; j++){
-                                                                if(()->state[CURRENT] == LIVE){
-								
+								int stat;
+								fscanf("%*d %*d %d\n",stat);
+                                                                if(stat == 1){
+									cells[i][j]->status[CURRENT] = LIVE;
+								}
+								else{
+									cells[i][j]->status[CURRENT] = DIE;
+								}
                                                         }
-					}
+						}
+						fclose(savePtr);
+					}break;
 				default:;
 			}
 			break;
