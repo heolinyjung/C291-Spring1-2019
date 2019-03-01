@@ -11,8 +11,6 @@
 
 /* Commentary:
  *
- * Implimentation based on Bruce Himebaugh's version for Tetris for C291 (2016)
- *
  */
 
 /* Copyright (c) 2018 The Trustees of Indiana University and
@@ -42,5 +40,6 @@ void init_game(void);
 void end(int,int);
 int game(int);
 void saveBoard(cell_t ***,int,int,int,int);
+void changeBoardSize(cell_t ***,int);
 
 /* game.h ends here */
