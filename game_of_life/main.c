@@ -32,6 +32,7 @@
 /* Code: */
 #include <stdio.h>
 #include <ncurses.h>
+#include <menu.h>
 #include "cell.h"
 #include "game.h"
 #include "key.h"

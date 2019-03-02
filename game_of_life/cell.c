@@ -33,6 +33,14 @@
 #include "cell.h"
 
 #define DRAW_CHAR '+'
+#define RED   "\x1B[31m"
+#define GRN   "\x1B[32m"
+#define YEL   "\x1B[33m"
+#define BLU   "\x1B[34m"
+#define MAG   "\x1B[35m"
+#define CYN   "\x1B[36m"
+#define WHT   "\x1B[37m"
+#define RESET "\x1B[0m"
 
 cell_t * create_cell (int init_x, int init_y)
 {
@@ -83,10 +91,16 @@ void print_cell (cell_t * c)
 
 void display_cell (cell_t * c)
 {
-	if (c->state[CURRENT] == LIVE)
-		mvprintw(c->y, c->x, "%c", c->draw_char);
-	else
+	start_color();
+	init_pair(1, COLOR_GREEN, COLOR_BLACK);
+	if (c->state[CURRENT] == LIVE){
+		attron(COLOR_PAIR(1));
+		mvprintw(c->y, c->x,"%c", c->draw_char);
+		attroff(COLOR_PAIR(1));
+	}
+	else{
 		mvprintw(c->y, c->x, " ");
+	}
 }
 
 // display all the cells
@@ -128,6 +142,7 @@ void undisplay_cell (cell_t * c)
 
 // count neighbours of each cell and update the state
 // uses Oli's (my) new algorithim
+//UPDATED TO USE TRANSPARENT WALLS
 void update_neighbours (int c_size_x, int c_size_y, cell_t * c[c_size_x][c_size_y])
 {
     int n;
@@ -135,16 +150,36 @@ void update_neighbours (int c_size_x, int c_size_y, cell_t * c[c_size_x][c_size_
 	for (x = 0; x < c_size_x-1; x++) {
 		for (y = 0; y < c_size_y-1; y++) {
 			n = 0; //num of neighbours
+			int xmod;
+			int ymod;
 			int i;
 			int j;
 			for(i = -1; i <= 1; i++){
 				for(j = -1; j <= 1; j++){
-					 if((x-1 >= 0) && (x+1 <= c_size_x)){
-                                		if((y-1 >= 0) && (y+1 <= c_size_y)){
-							if(c[(x)+i][(y)+j]->state[CURRENT] == LIVE){
-								n++;
-							}
+					if((x+i >= 0) && (x+i <= c_size_x) && (y+j >= 0) && (y+j <= c_size_y)){
+						xmod = x+i;
+						ymod = y+j;
+					}
+					else{
+						if((x+i < 0) && (y+j >= 0) && (y+j <= c_size_y)){
+							xmod = c_size_x + i;
+							ymod = y+j;
 						}
+						if(x+i > c_size_x && (y+j >= 0) && (y+j <= c_size_y)){
+							xmod = 0+i;
+							ymod = y+j;
+						}
+						if(y+j < 0 && (x+i >= 0) && (x+i <= c_size_x)){
+                                                        ymod = c_size_y-j;
+							xmod = x+i;
+                                                }
+						if(y+j > c_size_y && (x+i >= 0) && (x+i <= c_size_x)){
+                                                        ymod = 0+i;
+							xmod = x+i;
+                                                }
+					}
+					if(c[xmod][ymod]->state[CURRENT] == LIVE){
+						n++;
 					}
 				}
 			}

@@ -56,7 +56,9 @@ well_t *init_well(int upper_left_x, int upper_left_y, int width, int height)
 void draw_well(well_t *w)
 {
 	int row_counter, column_counter;
-
+	start_color();
+	init_pair(2,COLOR_BLACK,COLOR_CYAN);
+	attron(COLOR_PAIR(2));
 	// Draw Top of well
 	for (row_counter = w->upper_left_x;
 		 row_counter <= (w->upper_left_x + w->width);
@@ -84,6 +86,7 @@ void draw_well(well_t *w)
 		 row_counter++) {
 		mvprintw(w->upper_left_y + w->height, row_counter, "%c", w->draw_char);
 	}
+	attroff(COLOR_PAIR(2));
 }
 
 well_t *changeWellSize(int upper_left_x, int upper_left_y, int width, int height, well_t *w)

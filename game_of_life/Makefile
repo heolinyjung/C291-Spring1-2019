@@ -4,7 +4,7 @@ CFLAGS= -I$(IDIR) -g -O0
 
 ODIR=.
 
-LIBS=-lncurses
+LIBS=-lmenu -lncurses
 
 _DEPS =
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))

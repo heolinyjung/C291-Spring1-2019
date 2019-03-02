@@ -24,12 +24,24 @@
 
 #include <unistd.h>
 #include <ncurses.h>
+#include <curses.h>
+#include <menu.h>
 #include <time.h>
 #include <stdlib.h>
+#include <string.h>
 #include "cell.h"
 #include "game.h"
 #include "well.h"
 #include "key.h"
+
+char *choices[] = {
+                "Resume",
+                "Reset",
+                "Place a new shape",
+                "Help!",
+                "Quit",
+		(char*)NULL
+};
 
 void init_game(void)
 {
@@ -73,8 +85,8 @@ int game(int shape)
 			mvprintw(y_max-2,0,"Press '/' to decrease speed by 1.2x");
 			mvprintw(y_max-5,0,"Press '+' to increase well size");
 			mvprintw(y_max-4,0,"Press '-' to decrease well size");
-			mvprintw(y_max-6,0,"Press 'p' to pause/unpause the simulation");
-			mvprintw(y_max-1,0,"Press 'q' to quit");
+			mvprintw(y_max-6,0,"Press 'p' to pause and bring up the menu");
+			mvprintw(y_max-7,0,"Press 'g' for a secret!");
 
 			x_offset = (x_max / 2) - (WELL_WIDTH / 2);
 			y_offset = (y_max / 2) - (WELL_HEIGHT / 2);
@@ -143,15 +155,12 @@ int game(int shape)
 			int input;
 			input = getch();
 			double tempMove;
+			int menu;
 
 			switch(input){
-				case (int)'q':;
-				case (int)'Q': state = GAME_OVER;break; //exit condition
 				case (int)'p':;
-				case (int)'P': input = getch();
-					while(input!=(int)'P' && input!=(int)'p'){
-						input = getch();
-					}
+				case (int)'P':
+					state = PAUSED;
 					break;
 				//increase or decrease speed
 				case (int)'*': tempMove = (double)move_timeout;tempMove /= 1.2;move_timeout = (int)tempMove;break;
@@ -167,52 +176,100 @@ int game(int shape)
 					undraw_well(w);
 					w = changeWellSize(x_offset-1,y_offset-1,wellW,wellH,w);
 					draw_well(w);
-					changeBoardSize(cellsPtr,);
+					//changeBoardSize(cellsPtr,);
 					break;
-				case (int)'r':;
-				case (int)'R':
-                                        for(i=1;i<wellW-1;i++){
+				case (int)'g':
+					nodelay(stdscr,FALSE);
+					for(i=1;i<wellW-1;i++){
                                                 for(j=1;j<wellH-1;j++){
-							cells[i][j]->state[CURRENT] = DIE;
-							cells[i][j]->state[NEW] = DIE;
+                                                         cells[i][j]->state[CURRENT] = DIE;
+                                                         cells[i][j]->state[NEW] = DIE;
                                                 }
-                                        }break;
-				case (int)'F':;
-				case (int)'f':
-					//saveBoard(cells,x-offset,y-offset,wellW,wellH);
-					break;
-				case (int)'L':;
-				case (int)'l':;
-					/*FILE *savePtr;
-					char fileName[20];
-					int num;
-					scanw("%d",&num);
-					sprintf(fileName,"./saves/save%d.dat\0",num);
-                                        if((boardFPtr = fopen(fileName,"r")) == NULL){
-                                                mvprintw(5,0,"Save file %d could not be created",saveNum);
                                         }
-                                        else{
-						int xpos,ypos;
-						fscanf("%d\n%d\n%d\n%d\n",&xpos,&ypos,&wellW,&wellH);
-						x_offset = xpos;
-						y_offest = ypos;
-						for(i = 0; i<wellW-1; i++){
-							for(j = 0; j < wellH-1; j++){
-								int stat;
-								fscanf("%*d %*d %d\n",stat);
-                                                                if(stat == 1){
-									cells[i][j]->status[CURRENT] = LIVE;
-								}
-								else{
-									cells[i][j]->status[CURRENT] = DIE;
-								}
-                                                        }
-						}
-						fclose(savePtr);
-					}*/break;
+					//G
+					cells[2][2]->state[CURRENT] = LIVE;
+                                        cells[3][2]->state[CURRENT] = LIVE;
+                                        cells[4][2]->state[CURRENT] = LIVE;
+                                        cells[5][2]->state[CURRENT] = LIVE;
+					cells[6][2]->state[CURRENT] = LIVE;
+                                        cells[2][3]->state[CURRENT] = LIVE;
+                                        cells[2][4]->state[CURRENT] = LIVE;
+                                        cells[2][5]->state[CURRENT] = LIVE;
+                                        cells[2][6]->state[CURRENT] = LIVE;
+					cells[3][6]->state[CURRENT] = LIVE;
+                                        cells[4][6]->state[CURRENT] = LIVE;
+                                        cells[5][6]->state[CURRENT] = LIVE;
+                                        cells[6][6]->state[CURRENT] = LIVE;
+					cells[6][4]->state[CURRENT] = LIVE;
+                                        cells[6][5]->state[CURRENT] = LIVE;
+					cells[5][4]->state[CURRENT] = LIVE;
+                                        cells[4][4]->state[CURRENT] = LIVE;
+
+					//N
+                                        cells[8][2]->state[CURRENT] = LIVE;
+                                        cells[8][3]->state[CURRENT] = LIVE;
+                                        cells[8][4]->state[CURRENT] = LIVE;
+					cells[8][5]->state[CURRENT] = LIVE;
+					cells[8][6]->state[CURRENT] = LIVE;
+					cells[9][3]->state[CURRENT] = LIVE;
+					cells[10][4]->state[CURRENT] = LIVE;
+					cells[11][5]->state[CURRENT] = LIVE;
+					cells[12][6]->state[CURRENT] = LIVE;
+					cells[12][2]->state[CURRENT] = LIVE;
+                                        cells[12][3]->state[CURRENT] = LIVE;
+                                        cells[12][4]->state[CURRENT] = LIVE;
+                                        cells[12][5]->state[CURRENT] = LIVE;
+
+					//U
+					cells[14][2]->state[CURRENT] = LIVE;
+                                        cells[14][3]->state[CURRENT] = LIVE;
+                                        cells[14][4]->state[CURRENT] = LIVE;
+                                        cells[14][5]->state[CURRENT] = LIVE;
+                                        cells[14][6]->state[CURRENT] = LIVE;
+					cells[15][6]->state[CURRENT] = LIVE;
+                                        cells[16][6]->state[CURRENT] = LIVE;
+                                        cells[17][6]->state[CURRENT] = LIVE;
+                                        cells[18][6]->state[CURRENT] = LIVE;
+					cells[18][2]->state[CURRENT] = LIVE;
+                                        cells[18][3]->state[CURRENT] = LIVE;
+                                        cells[18][4]->state[CURRENT] = LIVE;
+                                        cells[18][5]->state[CURRENT] = LIVE;
+                                        cells[18][6]->state[CURRENT] = LIVE;
+					display_cells(WELL_WIDTH-1, WELL_HEIGHT-1, cells);
+					mvprintw(y_max-1,20,"Press any button to continue");
+					input = getch();
+					break;
 				default:;
 			}
 			break;
+		case PAUSED:
+			menu = pauseGame(x_max,y_max);
+                        switch(menu){
+                        //Reset = 1, new shape = 2, help = 3, quit = 4
+                        	case 1:
+                                	for(i=1;i<wellW-1;i++){
+                                        	for(j=1;j<wellH-1;j++){
+                                                	cells[i][j]->state[CURRENT] = DIE;
+                                                        cells[i][j]->state[NEW] = DIE;
+                                                }
+                                        }break;
+                                case 2:mvprintw(y_max-10,0,"New shape");
+                                	break;
+                                case 3:mvprintw(y_max-10,0,"Help");
+                                	break;
+                                case 4:
+                                	state = GAME_OVER;
+                                        break;
+                                default:mvprintw(20,0,"%d",menu);
+                        }
+                        draw_well(w);
+                        mvprintw(y_max-3,0,"Press '*' to increase speed by 1.2x");
+                        mvprintw(y_max-2,0,"Press '/' to decrease speed by 1.2x");
+                        mvprintw(y_max-5,0,"Press '+' to increase well size");
+                        mvprintw(y_max-4,0,"Press '-' to decrease well size");
+                        mvprintw(y_max-6,0,"Press 'p' to pause and bring up the menu");
+			state = STEP;
+                        break;
 		case GAME_OVER: 
 			end(x_max,y_max);
 			state = EXIT;
@@ -237,15 +294,15 @@ void end(int x_max, int y_max){
 	int cont = getch();
 	if(cont){}
 }
-
+/*
 void changeBoardSize(cell_t ***, int change){
 	cell_t * cNew[wellW][wellH];
         for(i=0;i<wellW;i++){
         	for(j=0;j<wellH;j++){
                 	if(i!=change&&j!=1&&i!=wellW-1&&j!=wellH-1){
                         	cNew[i][j] = cells[i][j];
-                                                                undisplay_cell(cells[i][j]);
-                                                                destroy_cell(cells[i][j]);
+                                			undisplay_cell(cells[i][j]);
+                                			destroy_cell(cells[i][j]);
                                                         }
                                                         else{
                                                                 cNew[i][j] = create_cell(x_offset+i,y_offset+j);
@@ -256,7 +313,7 @@ void changeBoardSize(cell_t ***, int change){
 }
 
 //save a board to a file
-/*
+
  * Files are formatted like so:
  * WellX
  * WellY
@@ -308,4 +365,145 @@ void saveBoard(cell_t ** cells, int wellX, int wellY, int wellW, int wellH){
 	}
 
 }
+
+void loadBoard(cell_t *** cTemp, int wellX, int wellY, int wellW, int wellH){
+	FILE *savePtr;
+        char fileName[20];
+        int num;
+        scanw("%d",&num);
+        sprintf(fileName,"./saves/save%d.dat\0",num);
+        if((boardFPtr = fopen(fileName,"r")) == NULL){
+        	mvprintw(5,0,"Save file %d could not be created",saveNum);
+        }
+        else{
+        	int xpos,ypos;
+                fscanf("%d\n%d\n%d\n%d\n",&xpos,&ypos,&wellW,&wellH);
+                x_offset = xpos;
+                y_offest = ypos;
+                for(i = 0; i<wellW-1; i++){
+                	for(j = 0; j < wellH-1; j++){
+                        	int stat;
+                                fscanf("%*d %*d %d\n",stat);
+                                if(stat == 1){
+                                	cells[i][j]->status[CURRENT] = LIVE;
+                                }
+                                else{
+                                	cells[i][j]->status[CURRENT] = DIE;
+                                }
+                        }
+                }
+                fclose(savePtr);
+        }
+}
 */
+
+//Menu gen
+int pauseGame(int x_max, int y_max){
+	nodelay(stdscr,FALSE);
+	ITEM **menuItems;
+	int c;
+	MENU *menuPtr;
+	WINDOW* menuWindow;
+	int numChoices, i;
+	ITEM *currentItem;
+
+	// Initialize
+	clear();
+	start_color();
+	cbreak();
+	noecho();
+	keypad(stdscr,TRUE);
+	init_pair(1, COLOR_BLUE, COLOR_WHITE);
+
+	// Create items
+	numChoices = ARRAY_SIZE(choices);
+	menuItems = (ITEM**)calloc(numChoices + 1, sizeof(ITEM*));
+
+	for(i = 0; i < numChoices; ++i){
+		menuItems[i] = new_item(choices[i],choices[i]);
+	}
+	menuItems[numChoices] = (ITEM*)NULL;
+
+	// Initialize menu
+	menuPtr = new_menu((ITEM**)menuItems);
+
+	menuWindow = newwin(10,27,(y_max/2) - 5,(x_max/2) - 10);
+	keypad(menuWindow,TRUE);
+
+	set_menu_win(menuPtr, menuWindow);
+	set_menu_sub(menuPtr, derwin(menuWindow,6,20,3,1));
+
+	// Sets marker to *
+	set_menu_mark(menuPtr, " * ");
+
+	print_in_middle(menuWindow, 1, 0, 27, "Oli's Game Of Life Menu", COLOR_PAIR(1));
+	mvwaddch(menuWindow, 2, 0, (int)'|');
+	mvwhline(menuWindow, 2, 1, (int)'-', 25);
+	mvwaddch(menuWindow, 2, 26, (int)'|');
+
+	refresh();
+	post_menu(menuPtr);
+	wrefresh(menuWindow);
+
+	//ATTEMPT
+	char* reset = "Reset";
+	char* exit = "Quit";
+
+	//output int
+	int out = 0;
+	while((c = getch()) != 10){
+		
+		switch(c){
+			case KEY_DOWN:
+				menu_driver(menuPtr, REQ_DOWN_ITEM);
+				break;
+			case KEY_UP:
+				menu_driver(menuPtr, REQ_UP_ITEM);
+				break;
+			case 10: /* Enter */
+				if(strcmp(item_name(current_item(menuPtr)),"Resume")==0)
+                                        out = 5;	
+				else if(strcmp(item_name(current_item(menuPtr)),"Reset")==0)
+					out = 1;
+				else if(strcmp(item_name(current_item(menuPtr)),"Place a new shape")==0)
+                                        out = 2;
+				else if(strcmp(item_name(current_item(menuPtr)),"Help!")==0)
+                                        out = 3;
+				else if(strcmp(item_name(current_item(menuPtr)),exit)==0)
+                                        out = 4;
+				break;
+		}
+		refresh();
+	}
+
+	unpost_menu(menuPtr);
+	free_menu(menuPtr);
+	for(i = 0; i < numChoices; ++i){
+		free_item(menuItems[i]);
+	}
+	clear();
+	return out;
+}
+
+void print_in_middle(WINDOW *win, int starty, int startx, int width, char *string, chtype color)
+{	int length, x, y;
+	float temp;
+
+	if(win == NULL)
+		win = stdscr;
+	getyx(win, y, x);
+	if(startx != 0)
+		x = startx;
+	if(starty != 0)
+		y = starty;
+	if(width == 0)
+		width = 80;
+
+	length = strlen(string);
+	temp = (width - length)/ 2;
+	x = startx + (int)temp;
+	wattron(win, color);
+	mvwprintw(win, y, x, "%s", string);
+	wattroff(win, color);
+	refresh();
+}
